@@ -1,0 +1,12 @@
+variable "aws_account_id" {}
+variable "aws_profile" {}
+variable "aws_region" {}
+
+
+variable "organization" {}
+variable "env" {}
+
+variable "tf_state_bucket" {}
+
+variable "my_ip_address" {}
+variable "aws_linux_2_ami" {}
