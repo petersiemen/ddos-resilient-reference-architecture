@@ -10,3 +10,4 @@ tf_state_bucket = "acme-development-terraform-remote-state" # e.g. amce-terrafor
 my_ip_address   = "91.65.136.126"                           # e.g. 91.65.136.222
 aws_linux_2_ami = "ami-0df0e7600ad0913a9"                   #
 
+admin_public_ssh_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7u+xdOvvKxZYaG5sOREKYlwgH5Xfy0oIY8pIJ27d04kwoIWbbGuYXJ9C/1wOPq0URvOv6F5ztEyzAJ71KHREJymTwEqtrshIXqVokcAF76/QhEM+AtO0+7277WKtdsBPap4+jrwpJyUr2QaichfXHXBbDp56dpXCeXeool5d/ZuBg9RfFQM6V1aFwz7YroL3frJhRV2Eo/iSPPHspDQXlODcjYCVB/ECZy1dR56W8RsA8VivNGZJHtb1Py50tTgBRj1hFUIxEkFwQRB6cU8CFZw95T5j9xt1Adn1u6h2IBiv3EdLlM1F8YQdanwstWQT1ipgjtGJdGrZMfEoFrPcv peter@xps"

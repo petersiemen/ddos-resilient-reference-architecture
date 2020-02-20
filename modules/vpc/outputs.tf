@@ -50,3 +50,15 @@ output "private_subnet_3_id" {
 output "private_subnet_3_arn" {
   value = aws_subnet.private-3.arn
 }
+
+output "security_group_private_id" {
+  value = aws_security_group.private.id
+}
+
+output "security_group_dmz_id" {
+  value = aws_security_group.dmz.id
+}
+
+output "security_group_lb_id" {
+  value = aws_security_group.lb.id
+}
