@@ -1,6 +1,8 @@
 resource "aws_cloudfront_distribution" "cf-for-dynamic-content" {
   enabled = true
 
+  web_acl_id = var.web_acl_id
+
   default_cache_behavior {
     allowed_methods = [
       "DELETE",

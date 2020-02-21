@@ -22,6 +22,18 @@ data "terraform_remote_state" "alb" {
   }
 }
 
+data "terraform_remote_state" "waf" {
+  backend = "s3"
+
+  config = {
+    encrypt        = "true"
+    bucket         = var.tf_state_bucket
+    key            = "waf.tfstate"
+    region         = var.aws_region
+    dynamodb_table = "terraform-lock"
+  }
+}
+
 
 module "cloudfront" {
   source       = "../../modules/cloudfront"
@@ -30,4 +42,5 @@ module "cloudfront" {
   aws_region   = var.aws_region
   alb_dns_name = data.terraform_remote_state.alb.outputs.alb_dns_name
   alb_id       = data.terraform_remote_state.alb.outputs.alb_id
+  web_acl_id   = data.terraform_remote_state.waf.outputs.web_acl_id
 }
