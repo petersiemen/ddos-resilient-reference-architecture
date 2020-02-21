@@ -25,15 +25,30 @@ attacks in extendable and reusable [terraform](https://www.terraform.io/) module
     ```
 3. Alias Terraform to use your AWS_PROFILE
     ```shell script
-    
+    alias terraform-REPLACE_WITH_YOUR_AWS_PROFILE="AWS_PROFILE=REPLACE_WITH_YOUR_AWS_PROFILE terraform"
     ``` 
 
-4. Terraforming
+4. Terraforming ...
     
-    1. Bootstrapping the remote terraform state storage
+    1. **bootstrap** the remote terraform state storage. 
+    Terraform the S3 bucket and one DynamoDB table for storing the state of each layer and its lock. 
         ```shell script
         cd ~/workspace/ddos-resilient-reference-architecture/prod/bootstrap
+        terraform init 
         terraform apply
         ```  
-        
-    
+    2. The foundation of an infrastructure with a minimal attack surface is  
+    a custom **VPC (virtual private network)**. Each instance and service should be hardened by
+    a custom set of **nacl's (network access control lists)** and **Security Groups** inside this VPC.
+        ```shell script
+        cd ~/workspace/ddos-resilient-reference-architecture/prod/vpc
+        terraform init
+        terraform apply
+        ```
+    3. A **jumphost** will come in handy when something is not feeling right. We can ssh into the jumphost and onwards into the 
+    private section of the custom VPC.  
+        ```shell script
+        cd ~/workspace/ddos-resilient-reference-architecture/prod/jumphost
+        terraform init
+        terraform apply
+        ```
