@@ -11,7 +11,7 @@ terraform {
   }
 }
 
-module "web-server" {
+module "alb" {
   source          = "../../modules/alb"
   env             = var.env
   organization    = var.organization

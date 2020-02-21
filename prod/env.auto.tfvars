@@ -1,6 +1,7 @@
 aws_account_id = "982023434191"     # e.g. 123455678
 aws_profile    = "free-development" # e.g. 123455678
 aws_region     = "eu-central-1"     # Keep or use a region closer to you
+aws_az_a       = "eu-central-1a"    # Keep or use a region closer to you
 
 organization = "acme" # e.g. acme
 env          = "prod" # e.g. prod or stag
