@@ -52,3 +52,31 @@ attacks in extendable and reusable [terraform](https://www.terraform.io/) module
         terraform init
         terraform apply
         ```
+       
+    4. An **application load balancer** for our super simple flask page (flask because we want to make sure that dynamic content will be served later on through our CloudFront CDN) and
+    an **autoscaling group**, it's **target group** and **launch template** (successor of launch configurations with some added functionality like versioning)
+        ```shell script
+        cd ~/workspace/ddos-resilient-reference-architecture/prod/alb
+        terraform init
+        terraform apply
+       
+        cd ~/workspace/ddos-resilient-reference-architecture/prod/asg-webserver
+        terraform init
+        terraform apply
+        ```
+       
+    5. A **web application firewall** with one simple rule configured to lock out "imaginary" rogue ip addresses from somewhere in china
+        ```shell script
+        cd ~/workspace/ddos-resilient-reference-architecture/prod/waf
+        terraform init
+        terraform apply
+        ```
+          
+    5. A **cloudfront distribution** that caches nothing by default. But since CloudFront only accepts well-formed HTTP connections it will help to 
+    prevent many common DDoS attacks like SYN floods and UDP reflection attacks. 
+    Going forward this cloudfront distribution can of course be extended to cache static content for specific URL paths.
+        ```shell script
+        cd ~/workspace/ddos-resilient-reference-architecture/prod/cloudfront
+        terraform init
+        terraform apply
+        ```
