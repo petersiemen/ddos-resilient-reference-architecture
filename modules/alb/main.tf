@@ -30,19 +30,7 @@ resource "aws_alb_target_group" "target-group" {
 }
 
 
-//resource "aws_alb_target_group_attachment" "webserver" {
-//  target_group_arn = aws_alb_target_group.target-group.arn
-//  target_id        = data.terraform_remote_state.web-server.outputs.web_server_instance_id
-//  port             = 80
-//}
-
-//resource "aws_autoscaling_attachment" "asg_attachment_bar" {
-//  autoscaling_group_name = data.terraform_remote_state.asg-webserver.outputs.asg_group_name
-//  alb_target_group_arn   = aws_alb_target_group.target-group.arn
-//}
-
-
-resource "aws_lb" "alb" {
+resource "aws_alb" "alb" {
   name               = "${var.organization}-${var.env}-alb"
   internal           = false
   load_balancer_type = "application"
@@ -61,8 +49,8 @@ resource "aws_lb" "alb" {
 }
 
 
-resource "aws_lb_listener" "front_end" {
-  load_balancer_arn = aws_lb.alb.arn
+resource "aws_alb_listener" "front_end" {
+  load_balancer_arn = aws_alb.alb.arn
   port              = "80"
   protocol          = "HTTP"
 

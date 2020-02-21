@@ -6,3 +6,5 @@ variable "env" {}
 variable "organization" {}
 variable "aws_linux_2_ami" {}
 
+variable "alb_target_group_arn" {}
+
