@@ -5,18 +5,30 @@ infrastructure-as-code (terraform) implementation of the  DDoS resilient referen
 
 ### Getting Started
 
-1. Setup aws-cli and AWS_PROFILE
-Configure aws-cli 
 
+1. Prerequisites
+    * [aws-cli](https://aws.amazon.com/cli/) 
+    * [terraform](https://www.terraform.io/)
+    * AWS account
+    * IAM user in AWS with programmatic access activate (ACCESS_KEY_ID, SECRET_ACCESS_KEY)
+    * configure [aws-cli](https://aws.amazon.com/cli/) to use a AWS_PROFILE with the downloaded ACCESS_KEY_ID, SECRET_ACCESS_KEY associated 
 2. Prepare environment
-
     2.1
- 
-```bash
-cd ~/workspace/ddos-resilient-reference-architecture
-cp example.auto.tfvars ./prod/env.auto.tfvars
-```
+    ```shell script
+    cd ~/workspace/ddos-resilient-reference-architecture
+    cp example.auto.tfvars ./prod/env.auto.tfvars
+    ```
+3. Alias Terraform to use your AWS_PROFILE
+    ```shell script
+    
+    ``` 
 
-    2.2
+4. Terraforming
+    
+    1. Bootstrapping the remote terraform state storage
+        ```shell script
+        cd ~/workspace/ddos-resilient-reference-architecture/prod/bootstrap
+        terraform apply
+        ```  
         
     
