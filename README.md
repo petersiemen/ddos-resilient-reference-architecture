@@ -1,5 +1,10 @@
 # ddos-resilient-reference-architecture
-infrastructure-as-code (terraform) implementation of the  DDoS resilient reference architecture suggested in https://d0.awsstatic.com/whitepapers/Security/DDoS_White_Paper.pdf
+
+Fully functional kickstarter codebase for a DDoS resilient architecture
+on AWS described in the AWS whitepaper [AWS Best Practices for DDos Resiliency](https://d0.awsstatic.com/whitepapers/Security/DDoS_White_Paper.pdf)
+
+Best practices in the AWS cloud to mitigate the risk of infrastructure and application layer
+attacks in extendable and reusable [terraform](https://www.terraform.io/) modules.
 
 
 
