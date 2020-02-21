@@ -3,6 +3,10 @@ resource "aws_cloudfront_distribution" "cf-for-dynamic-content" {
 
   web_acl_id = var.web_acl_id
 
+  aliases = [
+    "www.${var.organization}.com",
+  "${var.organization}.com"]
+
   default_cache_behavior {
     allowed_methods = [
       "DELETE",

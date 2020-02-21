@@ -4,15 +4,16 @@ terraform {
   backend "s3" {
     encrypt        = "true"
     bucket         = "acme-development-terraform-remote-state"
-    key            = "vpc.tfstate"
+    key            = "route53.tfstate"
     region         = "eu-central-1"
     dynamodb_table = "terraform-lock"
   }
 }
 
-module "vpc" {
-  source        = "../../modules/vpc"
-  env           = var.env
-  organization  = var.organization
-  my_ip_address = var.my_ip_address
+
+module "route53" {
+  source       = "../../modules/route53"
+  env          = var.env
+  organization = var.organization
+  aws_region   = var.aws_region
 }
