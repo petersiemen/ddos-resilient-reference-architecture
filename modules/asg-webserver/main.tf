@@ -44,6 +44,8 @@ resource "aws_launch_template" "launch-template" {
       Name = "${var.organization}-${var.env}-webserver"
     }
   }
+
+
 }
 
 
@@ -68,4 +70,20 @@ resource "aws_autoscaling_group" "asg" {
     # If not using the latest launch template this will make you wonder why updates of your launch template will not be picked up
     version = "$Latest"
   }
+}
+
+
+resource "aws_autoscaling_policy" "policy" {
+  name                   = "${var.organization}-${var.env}-webserver"
+  scaling_adjustment     = 1
+  adjustment_type        = "ChangeInCapacity"
+  cooldown               = 300
+  autoscaling_group_name = "${aws_autoscaling_group.asg.name}"
+  policy_type            = "SimpleScaling"
+}
+
+
+resource "aws_placement_group" "placement-group" {
+  name     = "${var.organization}-${var.env}-webserver"
+  strategy = "spread"
 }

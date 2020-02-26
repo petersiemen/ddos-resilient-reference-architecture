@@ -10,23 +10,23 @@ terraform {
   }
 }
 
-data "terraform_remote_state" "route53" {
-  backend = "s3"
+terraform {
+  required_version = ">= 0.12.20"
+}
 
-  config = {
-    encrypt        = "true"
-    bucket         = var.tf_state_bucket
-    key            = "route53.tfstate"
-    region         = var.aws_region
-    dynamodb_table = "terraform-lock"
-  }
+provider "aws" {
+  version = "~> 2.0"
+  region  = "us-east-1"
 }
 
 
 module "certificates" {
-  source       = "../../modules/certificates"
-  env          = var.env
-  organization = var.organization
-  aws_region   = var.aws_region
-  zone_id      = data.terraform_remote_state.route53.outputs.zone_id
+  source      = "../../modules/certificates"
+  domain_name = "www.${var.domain}"
+  subject_alternative_names = [
+  var.domain]
+  zones = [
+    var.domain,
+  var.domain]
+
 }

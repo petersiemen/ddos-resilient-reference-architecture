@@ -1,54 +1,71 @@
 resource "aws_vpc" "this" {
   cidr_block = "10.0.0.0/16"
 
+  enable_dns_hostnames             = true
+  assign_generated_ipv6_cidr_block = true
+
   tags = {
     Name = "${var.organization}-${var.env}-custom-vpc"
   }
 }
 # public subnets
 resource "aws_subnet" "public-1" {
-  cidr_block              = "10.0.1.0/24"
-  vpc_id                  = aws_vpc.this.id
-  map_public_ip_on_launch = true
-  availability_zone       = "eu-central-1a"
+  #10.0.1.0/24
+  cidr_block                      = cidrsubnet(aws_vpc.this.cidr_block, 8, 1)
+  assign_ipv6_address_on_creation = true
+  ipv6_cidr_block                 = cidrsubnet(aws_vpc.this.ipv6_cidr_block, 8, 1)
+  vpc_id                          = aws_vpc.this.id
+  map_public_ip_on_launch         = true
+  availability_zone               = "eu-central-1a"
   tags = {
     Name = "public-1"
   }
 }
 
 resource "aws_subnet" "public-2" {
-  cidr_block              = "10.0.2.0/24"
-  vpc_id                  = aws_vpc.this.id
-  map_public_ip_on_launch = true
-  availability_zone       = "eu-central-1b"
+  #10.0.2.0/24
+  cidr_block                      = cidrsubnet(aws_vpc.this.cidr_block, 8, 2)
+  assign_ipv6_address_on_creation = true
+  ipv6_cidr_block                 = cidrsubnet(aws_vpc.this.ipv6_cidr_block, 8, 2)
+  vpc_id                          = aws_vpc.this.id
+  map_public_ip_on_launch         = true
+  availability_zone               = "eu-central-1b"
   tags = {
     Name = "public-2"
   }
 }
 resource "aws_subnet" "public-3" {
-  cidr_block              = "10.0.3.0/24"
-  vpc_id                  = aws_vpc.this.id
-  map_public_ip_on_launch = true
-  availability_zone       = "eu-central-1c"
+  #10.0.3.0/24
+  cidr_block                      = cidrsubnet(aws_vpc.this.cidr_block, 8, 3)
+  assign_ipv6_address_on_creation = true
+  ipv6_cidr_block                 = cidrsubnet(aws_vpc.this.ipv6_cidr_block, 8, 3)
+  vpc_id                          = aws_vpc.this.id
+  map_public_ip_on_launch         = true
+  availability_zone               = "eu-central-1c"
   tags = {
     Name = "public-3"
   }
 }
 
 resource "aws_subnet" "private-1" {
-  cidr_block = "10.0.101.0/24"
-
-  vpc_id            = aws_vpc.this.id
-  availability_zone = "eu-central-1b"
+  #10.0.101.0/24
+  cidr_block                      = cidrsubnet(aws_vpc.this.cidr_block, 8, 101)
+  assign_ipv6_address_on_creation = true
+  ipv6_cidr_block                 = cidrsubnet(aws_vpc.this.ipv6_cidr_block, 8, 101)
+  vpc_id                          = aws_vpc.this.id
+  availability_zone               = "eu-central-1b"
   tags = {
     Name = "private-1"
   }
 }
 
 resource "aws_subnet" "private-2" {
-  cidr_block        = "10.0.102.0/24"
-  vpc_id            = aws_vpc.this.id
-  availability_zone = "eu-central-1c"
+  #10.0.102.0/24
+  cidr_block                      = cidrsubnet(aws_vpc.this.cidr_block, 8, 102)
+  assign_ipv6_address_on_creation = true
+  ipv6_cidr_block                 = cidrsubnet(aws_vpc.this.ipv6_cidr_block, 8, 102)
+  vpc_id                          = aws_vpc.this.id
+  availability_zone               = "eu-central-1c"
   tags = {
     Name = "private-2"
   }
@@ -56,9 +73,12 @@ resource "aws_subnet" "private-2" {
 
 
 resource "aws_subnet" "private-3" {
-  cidr_block        = "10.0.103.0/24"
-  vpc_id            = aws_vpc.this.id
-  availability_zone = "eu-central-1c"
+  #10.0.103.0/24
+  cidr_block                      = cidrsubnet(aws_vpc.this.cidr_block, 8, 103)
+  assign_ipv6_address_on_creation = true
+  ipv6_cidr_block                 = cidrsubnet(aws_vpc.this.ipv6_cidr_block, 8, 103)
+  vpc_id                          = aws_vpc.this.id
+  availability_zone               = "eu-central-1c"
   tags = {
     Name = "private-3"
   }

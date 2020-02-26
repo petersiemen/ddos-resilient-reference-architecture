@@ -1,11 +1,16 @@
+data "aws_route53_zone" "main" {
+  name = var.domain
+}
+
 resource "aws_cloudfront_distribution" "cf-for-dynamic-content" {
   enabled = true
 
   web_acl_id = var.web_acl_id
 
   aliases = [
-    "www.${var.organization}.com",
-  "${var.organization}.com"]
+  var.domain]
+
+
 
   default_cache_behavior {
     allowed_methods = [
@@ -22,7 +27,8 @@ resource "aws_cloudfront_distribution" "cf-for-dynamic-content" {
 
     target_origin_id = var.alb_id
 
-    viewer_protocol_policy = "allow-all"
+    viewer_protocol_policy = "redirect-to-https"
+
     forwarded_values {
       headers = [
       "*"]
@@ -49,6 +55,20 @@ resource "aws_cloudfront_distribution" "cf-for-dynamic-content" {
     }
   }
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn = var.acm_certification_arn
+    ssl_support_method  = "sni-only"
+  }
+}
+
+resource "aws_route53_record" "apex" {
+
+  zone_id = data.aws_route53_zone.main.zone_id
+  name    = var.domain
+  type    = "A"
+
+  alias {
+    name                   = aws_cloudfront_distribution.cf-for-dynamic-content.domain_name
+    zone_id                = aws_cloudfront_distribution.cf-for-dynamic-content.hosted_zone_id
+    evaluate_target_health = false
   }
 }

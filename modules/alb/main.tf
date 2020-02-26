@@ -59,3 +59,18 @@ resource "aws_alb_listener" "front_end" {
     target_group_arn = aws_alb_target_group.target-group.arn
   }
 }
+
+resource "aws_lb_listener" "front_end_https" {
+  load_balancer_arn = aws_alb.alb.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = var.certificate_arn
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_alb_target_group.target-group.arn
+  }
+}
+
+

@@ -1,4 +1,7 @@
-variable "aws_region" {}
-variable "env" {}
-variable "organization" {}
-variable "zone_id" {}
+variable "domain_name" {}
+variable "zones" {
+  type = list(string)
+}
+variable "subject_alternative_names" {
+  type = list(string)
+}

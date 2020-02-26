@@ -11,7 +11,9 @@ resource "aws_security_group" "private" {
 resource "aws_security_group" "lb" {
   name   = "${var.organization}-${var.env}-lb"
   vpc_id = aws_vpc.this.id
-
+  //  tags = {
+  //    Name = "cloudfront_g"
+  //  }
 }
 
 
@@ -20,6 +22,17 @@ resource "aws_security_group_rule" "all-http-into-lb" {
   protocol          = "TCP"
   security_group_id = aws_security_group.lb.id
   to_port           = 80
+  type              = "ingress"
+  cidr_blocks = [
+    "0.0.0.0/0",
+  ]
+}
+
+resource "aws_security_group_rule" "all-https-into-lb" {
+  from_port         = 443
+  protocol          = "TCP"
+  security_group_id = aws_security_group.lb.id
+  to_port           = 443
   type              = "ingress"
   cidr_blocks = [
     "0.0.0.0/0",

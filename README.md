@@ -16,7 +16,8 @@ attacks in extendable and reusable [terraform](https://www.terraform.io/) module
     * [terraform](https://www.terraform.io/)
     * AWS account
     * IAM user in AWS with programmatic access activate (ACCESS_KEY_ID, SECRET_ACCESS_KEY)
-    * configure [aws-cli](https://aws.amazon.com/cli/) to use a AWS_PROFILE with the downloaded ACCESS_KEY_ID, SECRET_ACCESS_KEY associated 
+    * configure [aws-cli](https://aws.amazon.com/cli/) to use a AWS_PROFILE with the downloaded ACCESS_KEY_ID, SECRET_ACCESS_KEY associated
+    * Register a domain that you own in AWS Route53  
 2. Prepare environment
     2.1
     ```shell script

@@ -1,32 +1,38 @@
-resource "aws_acm_certificate" "main_cert" {
+data "aws_route53_zone" "main" {
+  count = length(var.zones)
+  name  = var.zones[count.index]
+}
 
-  domain_name       = "${var.organization}.com"
+
+resource "aws_acm_certificate" "certificate" {
+  domain_name       = var.domain_name
   validation_method = "DNS"
 
-  subject_alternative_names = [
-  "www.${var.organization}.com"]
+  subject_alternative_names = var.subject_alternative_names
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 }
 
-resource "aws_route53_record" "main_cert_main_validation" {
-  count = 1
 
-  name = "${lookup(aws_acm_certificate.main_cert.domain_validation_options[count.index], "resource_record_name")}"
+resource "aws_acm_certificate_validation" "validation" {
 
-  type    = "${lookup(aws_acm_certificate.main_cert.domain_validation_options[count.index], "resource_record_type")}"
-  zone_id = var.zone_id
-  records = [
-  "${lookup(aws_acm_certificate.main_cert.domain_validation_options[count.index], "resource_record_value")}"]
-  ttl = 60
+  certificate_arn = aws_acm_certificate.certificate.arn
+
+  validation_record_fqdns = aws_route53_record.validation_record[*].fqdn
+
+
 }
 
-resource "aws_acm_certificate_validation" "cert_validation" {
-  certificate_arn = aws_acm_certificate.main_cert.arn
+resource "aws_route53_record" "validation_record" {
+  count   = length(var.zones)
+  name    = lookup(aws_acm_certificate.certificate.domain_validation_options[count.index], "resource_record_name")
+  type    = lookup(aws_acm_certificate.certificate.domain_validation_options[count.index], "resource_record_type")
+  zone_id = element(data.aws_route53_zone.main.*.zone_id, count.index)
+  records = [
+  lookup(aws_acm_certificate.certificate.domain_validation_options[count.index], "resource_record_value")]
+  ttl = 60
 
-  validation_record_fqdns = [
-    aws_route53_record.main_cert_main_validation.fqdn
-  ]
+
 }
