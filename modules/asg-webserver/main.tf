@@ -41,7 +41,8 @@ resource "aws_launch_template" "launch-template" {
   tag_specifications {
     resource_type = "instance"
     tags = {
-      Name = "${var.organization}-${var.env}-webserver"
+      Name        = "${var.organization}-${var.env}-webserver"
+      Environment = var.env
     }
   }
 
@@ -53,7 +54,7 @@ resource "aws_autoscaling_group" "asg" {
   availability_zones = [
   var.aws_az_a]
   desired_capacity = 1
-  max_size         = 1
+  max_size         = 3
   min_size         = 1
 
   target_group_arns = [
@@ -75,11 +76,16 @@ resource "aws_autoscaling_group" "asg" {
 
 resource "aws_autoscaling_policy" "policy" {
   name                   = "${var.organization}-${var.env}-webserver"
-  scaling_adjustment     = 1
-  adjustment_type        = "ChangeInCapacity"
-  cooldown               = 300
-  autoscaling_group_name = "${aws_autoscaling_group.asg.name}"
-  policy_type            = "SimpleScaling"
+  autoscaling_group_name = aws_autoscaling_group.asg.name
+  policy_type            = "TargetTrackingScaling"
+
+  target_tracking_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
+    }
+    target_value = 75
+  }
+
 }
 
 

@@ -53,7 +53,13 @@ attacks in extendable and reusable [terraform](https://www.terraform.io/) module
         terraform init
         terraform apply
         ```
-       
+    3. Create an **ssl certificate** using AWS certificate manager to be used in cloudfront 
+        ```shell script
+        cd ~/workspace/ddos-resilient-reference-architecture/prod/certificates
+        terraform init
+        terraform apply
+        ```       
+              
     4. An **application load balancer** for our super simple flask page (flask because we want to make sure that dynamic content will be served later on through our CloudFront CDN) and
     an **autoscaling group**, it's **target group** and **launch template** (successor of launch configurations with some added functionality like versioning)
         ```shell script

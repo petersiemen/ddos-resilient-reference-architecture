@@ -10,9 +10,11 @@ terraform {
   }
 }
 
-module "certification" {
-  source = "../../modules/certificates"
-  domain = var.domain
+module "certificates" {
+  source                    = "../../modules/certificates"
+  domain_name               = "www.${var.domain}"
+  subject_alternative_names = [var.domain]
+  zones                     = []
 }
 
 module "alb" {
@@ -21,5 +23,5 @@ module "alb" {
   organization    = var.organization
   aws_region      = var.aws_region
   tf_state_bucket = var.tf_state_bucket
-  certificate_arn = module.certification.acm_certification_arn
+  certificate_arn = module.certificates.acm_certification_arn
 }

@@ -22,7 +22,7 @@ resource "aws_alb_target_group" "target-group" {
     interval            = 5
     healthy_threshold   = 2
     protocol            = "HTTP"
-    path                = "/index.html"
+    path                = "/"
     port                = 80
     timeout             = 2
     unhealthy_threshold = 2
@@ -34,6 +34,7 @@ resource "aws_alb" "alb" {
   name               = "${var.organization}-${var.env}-alb"
   internal           = false
   load_balancer_type = "application"
+  enable_http2       = true
   security_groups = [
   data.terraform_remote_state.vpc.outputs.security_group_lb_id]
   subnets = [
@@ -48,17 +49,17 @@ resource "aws_alb" "alb" {
   }
 }
 
-
-resource "aws_alb_listener" "front_end" {
-  load_balancer_arn = aws_alb.alb.arn
-  port              = "80"
-  protocol          = "HTTP"
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_alb_target_group.target-group.arn
-  }
-}
+//
+//resource "aws_alb_listener" "front_end" {
+//  load_balancer_arn = aws_alb.alb.arn
+//  port              = "80"
+//  protocol          = "HTTP"
+//
+//  default_action {
+//    type             = "forward"
+//    target_group_arn = aws_alb_target_group.target-group.arn
+//  }
+//}
 
 resource "aws_lb_listener" "front_end_https" {
   load_balancer_arn = aws_alb.alb.arn

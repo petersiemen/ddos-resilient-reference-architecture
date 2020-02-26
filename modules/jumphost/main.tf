@@ -31,7 +31,6 @@ resource "aws_instance" "jumphost" {
   ami                  = var.aws_linux_2_ami
   instance_type        = "t2.micro"
   key_name             = data.terraform_remote_state.iam.outputs.admin_key__name
-  ipv6_address_count   = 1
   iam_instance_profile = data.terraform_remote_state.iam.outputs.aws_iam_instance_profile__ec2__name
 
   subnet_id = data.terraform_remote_state.vpc.outputs.public_subnet_1_id
