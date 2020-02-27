@@ -1,5 +1,10 @@
+provider "aws" {
+  alias  = "us-east-1"
+  region = "us-east-1"
+}
+
+
 resource "aws_lambda_function" "lambda-update-security-groups" {
-  //  provider      = "aws.env"
   function_name = "UpdateSecurityGroups"
 
   s3_bucket = var.s3_bucket
@@ -13,7 +18,6 @@ resource "aws_lambda_function" "lambda-update-security-groups" {
 
 
 resource "aws_iam_role" "lambda-exec" {
-  //  provider = "aws.env"
   name = "lambda-update-security-groups"
 
   assume_role_policy = <<EOF
@@ -35,7 +39,6 @@ resource "aws_iam_role" "lambda-exec" {
 
 
 resource "aws_iam_policy" "update-security-groups-policy" {
-  //  provider    = "aws.env"
   name        = "update-security-groups-policy"
   description = "update-security-groups-policy"
   policy      = <<EOF
@@ -70,14 +73,13 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "lambda-update-security-groups" {
-  //  provider   = "aws.env"
   policy_arn = aws_iam_policy.update-security-groups-policy.arn
   role       = aws_iam_role.lambda-exec.id
 }
 
 
 resource "aws_sns_topic_subscription" "user_updates_sqs_target" {
-  provider  = "aws.us-east-1"
+  provider  = aws.us-east-1
   topic_arn = "arn:aws:sns:us-east-1:806199016981:AmazonIpSpaceChanged"
   protocol  = "lambda"
   endpoint  = aws_lambda_function.lambda-update-security-groups.arn

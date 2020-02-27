@@ -36,7 +36,10 @@ resource "aws_alb" "alb" {
   load_balancer_type = "application"
   enable_http2       = true
   security_groups = [
-  data.terraform_remote_state.vpc.outputs.security_group_lb_id]
+    data.terraform_remote_state.vpc.outputs.security_group_lb_id,
+    data.terraform_remote_state.vpc.outputs.security_group_cloudfront_g_http,
+    data.terraform_remote_state.vpc.outputs.security_group_cloudfront_r_http
+  ]
   subnets = [
     data.terraform_remote_state.vpc.outputs.public_subnet_1_id,
     data.terraform_remote_state.vpc.outputs.public_subnet_2_id,
@@ -49,24 +52,11 @@ resource "aws_alb" "alb" {
   }
 }
 
-//
-//resource "aws_alb_listener" "front_end" {
-//  load_balancer_arn = aws_alb.alb.arn
-//  port              = "80"
-//  protocol          = "HTTP"
-//
-//  default_action {
-//    type             = "forward"
-//    target_group_arn = aws_alb_target_group.target-group.arn
-//  }
-//}
 
-resource "aws_lb_listener" "front_end_https" {
+resource "aws_alb_listener" "front_end" {
   load_balancer_arn = aws_alb.alb.arn
-  port              = "443"
-  protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = var.certificate_arn
+  port              = "80"
+  protocol          = "HTTP"
 
   default_action {
     type             = "forward"

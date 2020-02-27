@@ -63,3 +63,11 @@ output "security_group_dmz_id" {
 output "security_group_lb_id" {
   value = aws_security_group.lb.id
 }
+
+output "security_group_cloudfront_g_http" {
+  value = aws_security_group.cloudfront-global-http
+}
+
+output "security_group_cloudfront_r_http" {
+  value = aws_security_group.cloudfront-regional-http
+}

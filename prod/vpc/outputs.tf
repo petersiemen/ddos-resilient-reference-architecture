@@ -62,3 +62,11 @@ output "security_group_dmz_id" {
 output "security_group_lb_id" {
   value = module.vpc.security_group_lb_id
 }
+
+output "security_group_cloudfront_g_http" {
+  value = module.vpc.security_group_cloudfront_g_http
+}
+
+output "security_group_cloudfront_r_http" {
+  value = module.vpc.security_group_cloudfront_r_http
+}

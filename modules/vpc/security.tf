@@ -62,29 +62,8 @@ resource "aws_security_group" "cloudfront-regional-http" {
 }
 
 
-resource "aws_security_group_rule" "all-http-into-lb" {
-  from_port         = 80
-  protocol          = "TCP"
-  security_group_id = aws_security_group.lb.id
-  to_port           = 80
-  type              = "ingress"
-  cidr_blocks = [
-    "0.0.0.0/0",
-  ]
-}
-
-resource "aws_security_group_rule" "all-https-into-lb" {
-  from_port         = 443
-  protocol          = "TCP"
-  security_group_id = aws_security_group.lb.id
-  to_port           = 443
-  type              = "ingress"
-  cidr_blocks = [
-    "0.0.0.0/0",
-  ]
-}
-
-resource "aws_security_group_rule" "all-http-out-from-lb" {
+# needed for checking target's health in target groups. lb is curling out to instances in target group
+resource "aws_security_group_rule" "http-out-from-lb" {
   from_port         = 80
   protocol          = "TCP"
   security_group_id = aws_security_group.lb.id
@@ -113,14 +92,6 @@ resource "aws_security_group_rule" "http-into-private-from-lb" {
   source_security_group_id = aws_security_group.lb.id
 }
 
-resource "aws_security_group_rule" "http-into-private-from-dmz" {
-  from_port                = 80
-  protocol                 = "TCP"
-  security_group_id        = aws_security_group.private.id
-  to_port                  = 80
-  type                     = "ingress"
-  source_security_group_id = aws_security_group.dmz.id
-}
 
 resource "aws_security_group_rule" "all-out-from-dmz" {
   from_port         = 0
@@ -155,44 +126,3 @@ resource "aws_security_group_rule" "ssh-into-dmz-from-home" {
   ]
 }
 
-
-
-resource "aws_security_group_rule" "all-out-from-cf-global-https" {
-  from_port         = 0
-  protocol          = "TCP"
-  security_group_id = aws_security_group.cloudfront-global-https.id
-  to_port           = 65535
-  type              = "egress"
-  cidr_blocks = [
-  "0.0.0.0/0"]
-}
-
-resource "aws_security_group_rule" "all-out-from-cf-regional-https" {
-  from_port         = 0
-  protocol          = "TCP"
-  security_group_id = aws_security_group.cloudfront-regional-https.id
-  to_port           = 65535
-  type              = "egress"
-  cidr_blocks = [
-  "0.0.0.0/0"]
-}
-
-resource "aws_security_group_rule" "all-out-from-cf-global-http" {
-  from_port         = 0
-  protocol          = "TCP"
-  security_group_id = aws_security_group.cloudfront-global-http.id
-  to_port           = 65535
-  type              = "egress"
-  cidr_blocks = [
-  "0.0.0.0/0"]
-}
-
-resource "aws_security_group_rule" "all-out-from-cf-regional-http" {
-  from_port         = 0
-  protocol          = "TCP"
-  security_group_id = aws_security_group.cloudfront-regional-http.id
-  to_port           = 65535
-  type              = "egress"
-  cidr_blocks = [
-  "0.0.0.0/0"]
-}
