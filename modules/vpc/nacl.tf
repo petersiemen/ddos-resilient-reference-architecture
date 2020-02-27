@@ -58,23 +58,48 @@ resource "aws_network_acl" "public-subnets" {
     to_port    = 65535
   }
 
-  # allow outbound HTTP traffic from the subnet to the internet.
+  # we need to allow internet access on port 80 because the load balancer is deployed into the public subnets
+  #
+  # further the NAT is deplyed into the public subnet. In order to gain internet HTTP acccess from the private subnet we would need
+  # to open port 80 for the cidr block of the vpc
+
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 130
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    # aws_vpc.this.cidr_block
+    from_port = 80
+    to_port   = 80
+  }
+
+
+  # allow ssh'ing through the vpc
   egress {
     protocol   = "tcp"
     rule_no    = 100
+    action     = "allow"
+    cidr_block = aws_vpc.this.cidr_block
+    from_port  = 22
+    to_port    = 22
+  }
+
+  # allow outbound HTTP traffic from the subnet to the internet.
+  egress {
+    protocol   = "tcp"
+    rule_no    = 110
     action     = "allow"
     cidr_block = "0.0.0.0/0"
     from_port  = 80
     to_port    = 80
   }
 
-  # allow outbound traffic from the subnet to my ip address
-  # Note: even ssh is beeing transported back on ephemeral ports (1024 - 65535)
+  # allow outbound traffic from the subnet to the internet (NAT instance talking to the internet, public ec2-instances talking back ssh)
   egress {
     protocol   = "tcp"
-    rule_no    = 110
+    rule_no    = 120
     action     = "allow"
-    cidr_block = "${var.my_ip_address}/32"
+    cidr_block = "0.0.0.0/0"
     from_port  = 1024
     to_port    = 65535
   }
@@ -93,37 +118,37 @@ resource "aws_network_acl" "public-subnets" {
 resource "aws_network_acl" "private-subnets" {
   vpc_id = aws_vpc.this.id
 
-  # ssh access from everywhere within the vpc
+  # allow ssh access from inside the vpc
   ingress {
     protocol   = "tcp"
-    rule_no    = 300
+    rule_no    = 100
     action     = "allow"
     cidr_block = aws_vpc.this.cidr_block
     from_port  = 22
     to_port    = 22
   }
 
-  # Allows inbound return traffic from hosts on the internet that are responding to requests originating in the subnet.
+  # allow inbound return traffic from hosts on the internet that are responding to requests originating in the subnet.
   ingress {
     protocol   = "tcp"
-    rule_no    = 200
+    rule_no    = 110
     action     = "allow"
     cidr_block = "0.0.0.0/0"
     from_port  = 1024
     to_port    = 65535
   }
 
-
-  egress {
+  # allow http traffic from the internet
+  ingress {
     protocol   = "tcp"
-    rule_no    = 200
+    rule_no    = 120
     action     = "allow"
-    cidr_block = "0.0.0.0/0"
+    cidr_block = aws_vpc.this.cidr_block
     from_port  = 80
     to_port    = 80
   }
 
-  # allow outbound traffic to the NAT
+  # allow return traffic back to the vpc (ssh back to public subnet)
   egress {
     protocol   = "tcp"
     rule_no    = 100
@@ -132,6 +157,17 @@ resource "aws_network_acl" "private-subnets" {
     from_port  = 1024
     to_port    = 65535
   }
+
+  # allow outbound HTTP traffic to the internet
+  egress {
+    protocol   = "tcp"
+    rule_no    = 110
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 80
+    to_port    = 80
+  }
+
 
   tags = {
     Name = "private-subnets"

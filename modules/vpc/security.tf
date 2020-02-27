@@ -61,9 +61,9 @@ resource "aws_security_group" "cloudfront-regional-http" {
   }
 }
 
-
 # needed for checking target's health in target groups. lb is curling out to instances in target group
 resource "aws_security_group_rule" "http-out-from-lb" {
+  description       = "ping out for target health"
   from_port         = 80
   protocol          = "TCP"
   security_group_id = aws_security_group.lb.id
