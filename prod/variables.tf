@@ -3,7 +3,6 @@ variable "aws_profile" {}
 variable "aws_region" {}
 variable "aws_az_a" {}
 
-
 variable "organization" {}
 variable "env" {}
 variable "domain" {}
@@ -17,3 +16,6 @@ variable "admin_public_ssh_key" {}
 variable "developer_name" {}
 variable "developer_ssh_key" {}
 variable "lambda_functions_bucket" {}
+
+variable "lambda_update_security_groups_prefix" {}
+variable "lambda_api_gateway_prefix" {}

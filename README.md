@@ -1,11 +1,7 @@
 # ddos-resilient-reference-architecture
 
-Fully functional kickstarter codebase for a DDoS resilient architecture
+A fully functional kickstarter codebase for the DDoS resilient reference architecture
 on AWS described in the AWS whitepaper [AWS Best Practices for DDos Resiliency](https://d0.awsstatic.com/whitepapers/Security/DDoS_White_Paper.pdf)
-
-Best practices in the AWS cloud to mitigate the risk of infrastructure and application layer
-attacks in extendable and reusable [terraform](https://www.terraform.io/) modules.
-
 
 
 ### Getting Started
@@ -19,7 +15,6 @@ attacks in extendable and reusable [terraform](https://www.terraform.io/) module
     * configure [aws-cli](https://aws.amazon.com/cli/) to use a AWS_PROFILE with the downloaded ACCESS_KEY_ID, SECRET_ACCESS_KEY associated
     * Register a domain that you own in AWS Route53  
 2. Prepare environment
-    2.1
     ```shell script
     cd ~/workspace/ddos-resilient-reference-architecture
     cp example.auto.tfvars ./prod/env.auto.tfvars
@@ -29,7 +24,7 @@ attacks in extendable and reusable [terraform](https://www.terraform.io/) module
     alias terraform-REPLACE_WITH_YOUR_AWS_PROFILE="AWS_PROFILE=REPLACE_WITH_YOUR_AWS_PROFILE terraform"
     ``` 
 
-4. Terraforming the layers on by one:     
+4. Terraforming the layers one by one:     
     1. **bootstrap** a s3 bucket and a dynamo table as a lockable remote storage for terraform's state 
         ```shell script
         cd ~/workspace/ddos-resilient-reference-architecture/prod/bootstrap
