@@ -29,38 +29,35 @@ attacks in extendable and reusable [terraform](https://www.terraform.io/) module
     alias terraform-REPLACE_WITH_YOUR_AWS_PROFILE="AWS_PROFILE=REPLACE_WITH_YOUR_AWS_PROFILE terraform"
     ``` 
 
-4. Terraforming ...
-    
-    1. **bootstrap** the remote terraform state storage. 
-    Terraform the S3 bucket and one DynamoDB table for storing the state of each layer and its lock. 
+4. Terraforming the layers on by one:     
+    1. **bootstrap** a s3 bucket and a dynamo table as a lockable remote storage for terraform's state 
         ```shell script
         cd ~/workspace/ddos-resilient-reference-architecture/prod/bootstrap
         terraform init 
         terraform apply
         ```  
-    2. The foundation of an infrastructure with a minimal attack surface is  
-    a custom **VPC (virtual private network)**. Each instance and service should be hardened by
-    a custom set of **nacl's (network access control lists)** and **Security Groups** inside this VPC.
+    2. The foundation of a secure infrastructure with a minimal attack surface is  
+    a custom **VPC**. Subnets, instances and services will be nicely locked up by
+    a custom set of **nacl's (network access control lists)** and **Security Groups**.
         ```shell script
         cd ~/workspace/ddos-resilient-reference-architecture/prod/vpc
         terraform init
         terraform apply
         ```
-    3. A **jumphost** will come in handy when something is not feeling right. We can ssh into the jumphost and onwards into the 
-    private section of the custom VPC.  
+    3. A **jumphost** / **bastion host** to ssh into the cloud if something is not feeling right. 
         ```shell script
         cd ~/workspace/ddos-resilient-reference-architecture/prod/jumphost
         terraform init
         terraform apply
         ```
-    3. Create an **ssl certificate** using AWS certificate manager to be used in cloudfront 
+    4. A **ssl certificate**. We are going to terminate ssl on cloudfront.    
         ```shell script
         cd ~/workspace/ddos-resilient-reference-architecture/prod/certificates
         terraform init
         terraform apply
         ```       
               
-    4. An **application load balancer** for our super simple flask page (flask because we want to make sure that dynamic content will be served later on through our CloudFront CDN) and
+    5. An **application load balancer** for our simple flask page (flask because we want to test that dynamic content will really not be cached by CloudFront CDN) and
     an **autoscaling group**, it's **target group** and **launch template** (successor of launch configurations with some added functionality like versioning)
         ```shell script
         cd ~/workspace/ddos-resilient-reference-architecture/prod/alb
@@ -72,18 +69,44 @@ attacks in extendable and reusable [terraform](https://www.terraform.io/) module
         terraform apply
         ```
        
-    5. A **web application firewall** with one simple rule configured to lock out "imaginary" rogue ip addresses from somewhere in china
+    6. A **web application firewall** with one simple rule configured to lock out "imaginary" rogue ip addresses from somewhere in china
         ```shell script
         cd ~/workspace/ddos-resilient-reference-architecture/prod/waf
         terraform init
         terraform apply
         ```
           
-    5. A **cloudfront distribution** that caches nothing by default. But since CloudFront only accepts well-formed HTTP connections it will help to 
+    7. A **cloudfront distribution** that caches nothing by default. Since CloudFront only accepts well-formed HTTP connections it will help to 
     prevent many common DDoS attacks like SYN floods and UDP reflection attacks. 
-    Going forward this cloudfront distribution can of course be extended to cache static content for specific URL paths.
+    Going forward this cloudfront distribution can be extended to cache static content for specific URL paths.
         ```shell script
         cd ~/workspace/ddos-resilient-reference-architecture/prod/cloudfront
         terraform init
         terraform apply
         ```
+
+    8. A **lambda** function that ensures that the security groups we attached to the **alb** let thourgh    cloudfront requests. 
+    The **lambda** function is triggered by the SNS event (AmazonIpSpaceChanged).
+        * Clone the lambda function
+            ```shell script
+            cd ~/workspace 
+            git clone git@github.com:petersiemen/update-security-group-for-cloudfront-access.git
+            ```
+        * Terraform an **s3** bucket that will serve as lamdba code artifact
+            ```shell script
+            cd ~/workspace/ddos-resilient-reference-architecture/prod/s3
+            terraform init
+            terraform apply
+            ```
+        * Package and update the lambda function to s3
+            ```shell script
+            cd ~/workspace/update-security-group-for-cloudfront-access 
+            sam package --s3-prefix v1.0 --s3-bucket REPLACE_WITH_YOUR_S3_BUCKET_FOR_LAMBDA_ARTIFACTS
+            ```
+        * Terraform the **lambda** function, **iam role** and **iam policy** for lambda and 
+        the **sns** topic that we are going to subscribe to
+            ```shell script
+            cd ~/workspace/ddos-resilient-reference-architecture/prod/lambda-update-security-groups
+            terraform init
+            terraform apply
+            ```
