@@ -33,4 +33,5 @@ module "asg-webserver" {
   lambda_function_arn        = data.terraform_remote_state.lambda-api-gateway.outputs.lambda_function_arn
   lambda_function_invoke_arn = data.terraform_remote_state.lambda-api-gateway.outputs.lambda_function_invoke_arn
   lambda_function_name       = data.terraform_remote_state.lambda-api-gateway.outputs.lambda_function_name
+  api-key                    = "01234567890123456789012345678911"
 }
