@@ -27,6 +27,18 @@ data "terraform_remote_state" "lambda-api-gateway" {
 }
 
 
+data "terraform_remote_state" "waf" {
+  backend = "s3"
+
+  config = {
+    encrypt        = "true"
+    bucket         = var.tf_state_bucket
+    key            = "waf.tfstate"
+    region         = var.aws_region
+    dynamodb_table = "terraform-lock"
+  }
+}
+
 module "asg-webserver" {
   source = "../../modules/api-gateway"
 
@@ -34,4 +46,5 @@ module "asg-webserver" {
   lambda_function_invoke_arn = data.terraform_remote_state.lambda-api-gateway.outputs.lambda_function_invoke_arn
   lambda_function_name       = data.terraform_remote_state.lambda-api-gateway.outputs.lambda_function_name
   api-key                    = "01234567890123456789012345678911"
+  web_acl_id                 = data.terraform_remote_state.waf.outputs.web_acl_id
 }

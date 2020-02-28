@@ -88,9 +88,9 @@ resource "aws_api_gateway_usage_plan" "usage-plan" {
   }
 
   quota_settings {
-    limit  = 20
-    offset = 2
-    period = "WEEK"
+    limit  = 1000
+    offset = 0
+    period = "DAY"
   }
 
   throttle_settings {
@@ -114,10 +114,8 @@ resource "aws_api_gateway_usage_plan_key" "usage-plan-key" {
 
 
 resource "aws_cloudfront_distribution" "cf-for-api-gateway" {
-  enabled = true
-
-
-  #web_acl_id = var.web_acl_id
+  enabled    = true
+  web_acl_id = var.web_acl_id
 
   aliases = [
     //    "www.${var.domain}",
@@ -152,6 +150,9 @@ resource "aws_cloudfront_distribution" "cf-for-api-gateway" {
 
       }
     }
+    min_ttl     = 0
+    default_ttl = 0
+    max_ttl     = 0
   }
 
 

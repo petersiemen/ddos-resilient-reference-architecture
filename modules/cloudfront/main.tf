@@ -31,7 +31,7 @@ resource "aws_cloudfront_distribution" "cf-for-dynamic-content" {
     forwarded_values {
       headers = [
       "*"]
-      query_string = false
+      query_string = true
       cookies {
         forward = "all"
       }
