@@ -54,7 +54,7 @@ resource "aws_autoscaling_group" "asg" {
   availability_zones = [
   var.aws_az_a]
   desired_capacity = 1
-  max_size         = 3
+  max_size         = 5
   min_size         = 1
 
   target_group_arns = [
@@ -73,9 +73,17 @@ resource "aws_autoscaling_group" "asg" {
   }
 }
 
+resource "aws_autoscaling_policy" "simple" {
+  name                   = "${var.organization}-${var.env}-simple-scaling"
+  scaling_adjustment     = 2
+  adjustment_type        = "ChangeInCapacity"
+  cooldown               = 300
+  autoscaling_group_name = aws_autoscaling_group.asg.name
+}
 
-resource "aws_autoscaling_policy" "policy" {
-  name                   = "${var.organization}-${var.env}-webserver"
+
+resource "aws_autoscaling_policy" "target-tracking" {
+  name                   = "${var.organization}-${var.env}-target-tracking-scaling"
   autoscaling_group_name = aws_autoscaling_group.asg.name
   policy_type            = "TargetTrackingScaling"
 
@@ -83,9 +91,73 @@ resource "aws_autoscaling_policy" "policy" {
     predefined_metric_specification {
       predefined_metric_type = "ASGAverageCPUUtilization"
     }
-    target_value = 75
+    target_value = 50
+  }
+}
+
+
+resource "aws_autoscaling_policy" "policy" {
+  name                   = "${var.organization}-${var.env}-step-scaling"
+  autoscaling_group_name = aws_autoscaling_group.asg.name
+  policy_type            = "StepScaling"
+
+  metric_aggregation_type   = "Average"
+  estimated_instance_warmup = 180
+
+  adjustment_type = "PercentChangeInCapacity"
+
+  step_adjustment {
+    scaling_adjustment          = 0
+    metric_interval_lower_bound = 0
+    metric_interval_upper_bound = 10
+  }
+  step_adjustment {
+    scaling_adjustment          = 10
+    metric_interval_lower_bound = 10
+    metric_interval_upper_bound = 20
+  }
+  step_adjustment {
+    scaling_adjustment          = 30
+    metric_interval_lower_bound = 20
+    metric_interval_upper_bound = null
   }
 
+  step_adjustment {
+    scaling_adjustment          = 0
+    metric_interval_lower_bound = -10
+    metric_interval_upper_bound = 0
+  }
+  step_adjustment {
+    scaling_adjustment          = -10
+    metric_interval_lower_bound = -20
+    metric_interval_upper_bound = -10
+  }
+  step_adjustment {
+    scaling_adjustment          = -30
+    metric_interval_lower_bound = null
+    metric_interval_upper_bound = -20
+  }
+}
+
+
+resource "aws_cloudwatch_metric_alarm" "bat" {
+  alarm_name          = "AverageCPUUtilizationOfASGGroup"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = 2
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/EC2"
+  period              = 120
+  statistic           = "Average"
+  threshold           = 50
+
+  dimensions = {
+    AutoScalingGroupName = aws_autoscaling_group.asg.name
+  }
+
+  alarm_description = "This metric monitors ec2 cpu utilization"
+  alarm_actions = [
+    aws_autoscaling_policy.simple.arn,
+  aws_autoscaling_policy.policy.arn]
 }
 
 
