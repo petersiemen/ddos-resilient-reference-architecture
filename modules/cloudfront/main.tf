@@ -37,6 +37,8 @@ resource "aws_cloudfront_distribution" "cf-for-dynamic-content" {
       }
     }
   }
+
+  # ALB origin
   origin {
     custom_origin_config {
       http_port              = 80
@@ -48,6 +50,8 @@ resource "aws_cloudfront_distribution" "cf-for-dynamic-content" {
     domain_name = var.alb_dns_name
     origin_id   = var.alb_id
   }
+
+
   restrictions {
     geo_restriction {
       restriction_type = "none"

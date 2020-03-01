@@ -1,3 +1,7 @@
+data "aws_route53_zone" "main" {
+  name = var.domain
+}
+
 resource "aws_api_gateway_rest_api" "any-api" {
   name        = "any-api"
   description = "A ddos resilient api (with the help of cloudfront and waf)"
@@ -74,10 +78,6 @@ resource "aws_lambda_permission" "lambda-permissions" {
 
 
 resource "aws_api_gateway_usage_plan" "usage-plan" {
-  //  depends_on = [
-  //    aws_api_gateway_rest_api.any-api,
-  //    aws_api_gateway_deployment.deployment
-  //  ]
   name         = "my-usage-plan"
   description  = "my description"
   product_code = "MYCODE"
@@ -118,9 +118,7 @@ resource "aws_cloudfront_distribution" "cf-for-api-gateway" {
   web_acl_id = var.web_acl_id
 
   aliases = [
-    //    "www.${var.domain}",
-    //  var.domain
-  ]
+  "api.${var.domain}"]
 
   default_cache_behavior {
     allowed_methods = [
@@ -179,6 +177,20 @@ resource "aws_cloudfront_distribution" "cf-for-api-gateway" {
     }
   }
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn = var.acm_certification_arn
+    ssl_support_method  = "sni-only"
+  }
+}
+
+resource "aws_route53_record" "apex" {
+
+  zone_id = data.aws_route53_zone.main.zone_id
+  name    = "api"
+  type    = "A"
+
+  alias {
+    name                   = aws_cloudfront_distribution.cf-for-api-gateway.domain_name
+    zone_id                = aws_cloudfront_distribution.cf-for-api-gateway.hosted_zone_id
+    evaluate_target_health = false
   }
 }

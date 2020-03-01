@@ -19,3 +19,4 @@ variable "lambda_functions_bucket" {}
 
 variable "lambda_update_security_groups_prefix" {}
 variable "lambda_api_gateway_prefix" {}
+variable "api_key" {}

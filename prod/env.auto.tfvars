@@ -19,3 +19,4 @@ lambda_functions_bucket = "acme-development-lambda-functions"
 
 lambda_update_security_groups_prefix = "v1.0/2556bce27016954f6c7d70ec68022c6f"
 lambda_api_gateway_prefix            = "lambda-api-gateway/v1.0/9a7c6f92b8444a84354ccfc83a1237a2"
+api_key                              = "01234567890123456789012345678911"

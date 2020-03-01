@@ -39,12 +39,26 @@ data "terraform_remote_state" "waf" {
   }
 }
 
-module "asg-webserver" {
+data "terraform_remote_state" "certificates" {
+  backend = "s3"
+
+  config = {
+    encrypt        = "true"
+    bucket         = var.tf_state_bucket
+    key            = "certificates.tfstate"
+    region         = var.aws_region
+    dynamodb_table = "terraform-lock"
+  }
+}
+
+module "api-gateway" {
   source = "../../modules/api-gateway"
 
   lambda_function_arn        = data.terraform_remote_state.lambda-api-gateway.outputs.lambda_function_arn
   lambda_function_invoke_arn = data.terraform_remote_state.lambda-api-gateway.outputs.lambda_function_invoke_arn
   lambda_function_name       = data.terraform_remote_state.lambda-api-gateway.outputs.lambda_function_name
-  api-key                    = "01234567890123456789012345678911"
+  api-key                    = var.api_key
   web_acl_id                 = data.terraform_remote_state.waf.outputs.web_acl_id
+  acm_certification_arn      = data.terraform_remote_state.certificates.outputs.acm_certification_arn
+  domain                     = var.domain
 }

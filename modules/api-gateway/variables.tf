@@ -3,3 +3,5 @@ variable "lambda_function_arn" {}
 variable "lambda_function_invoke_arn" {}
 variable "api-key" {}
 variable "web_acl_id" {}
+variable "acm_certification_arn" {}
+variable "domain" {}

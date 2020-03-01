@@ -24,8 +24,10 @@ module "certificates" {
   source      = "../../modules/certificates"
   domain_name = "www.${var.domain}"
   subject_alternative_names = [
-  var.domain]
+    var.domain,
+  "api.${var.domain}"]
   zones = [
+    var.domain,
     var.domain,
   var.domain]
 
