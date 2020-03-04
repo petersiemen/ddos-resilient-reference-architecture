@@ -6,3 +6,4 @@ generated-provider.tf
 example.env
 env.auto.tfvars
 .idea
+response.json

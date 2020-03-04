@@ -23,6 +23,7 @@ on AWS described in the AWS whitepaper [AWS Best Practices for DDos Resiliency](
     ```
 3. Alias **terraform** and **terragrunt** to use your AWS_PROFILE
     ```shell script
+    alias aws-REPLACE_WITH_YOUR_AWS_PROFILE="AWS_PROFILE=REPLACE_WITH_YOUR_AWS_PROFILE aws"
     alias terraform-REPLACE_WITH_YOUR_AWS_PROFILE="AWS_PROFILE=REPLACE_WITH_YOUR_AWS_PROFILE terraform"
     alias terragrunt-REPLACE_WITH_YOUR_AWS_PROFILE="AWS_PROFILE=REPLACE_WITH_YOUR_AWS_PROFILE terragrunt"
     alias sam-REPLACE_WITH_YOUR_AWS_PROFILE="AWS_PROFILE=REPLACE_WITH_YOUR_AWS_PROFILE sam"
@@ -60,4 +61,10 @@ the hashed prefix that both `sam package` commands returned.
     cd ~/workspace/ddos-resilient-reference-architecture/prod
     source .env
     terragrunt-REPLACE_WITH_YOUR_AWS_PROFILE apply-all
+    ```
+   
+9. We need to trigger the **AWS Lambda** function manually once to simulate the SNS Topic Notification (arn:aws:sns:us-east-1:806199016981:AmazonIpSpaceChanged)
+in order to update the security groups attached to the **alb** with the up to date list of IP addresses of all cloudfront edge locations
+    ```shell script
+    aws-REPLACE_WITH_YOUR_AWS_PROFILE lambda invoke --function-name UpdateSecurityGroups --payload file://~/workspace/update-security-group-for-cloudfront-access/events/event.json response.json
     ```
