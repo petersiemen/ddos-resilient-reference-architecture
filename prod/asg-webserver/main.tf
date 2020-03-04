@@ -1,30 +1,10 @@
-//provider "aws" {
-//  region = var.aws_region
-//}
-//
-//terraform {
-//  required_version = ">= 0.12.20"
-//
-//  backend "s3" {
-//    encrypt        = "true"
-//    bucket         = "acme-development-terraform-remote-state"
-//    key            = "asg-webserver.tfstate"
-//    region         = "eu-central-1"
-//    dynamodb_table = "terraform-lock"
-//  }
-//}
-//
-//data "terraform_remote_state" "alb" {
-//  backend = "s3"
-//
-//  config = {
-//    encrypt        = "true"
-//    bucket         = var.tf_state_bucket
-//    key            = "alb.tfstate"
-//    region         = var.aws_region
-//    dynamodb_table = "terraform-lock"
-//  }
-//}
+variable "env" {}
+variable "organization" {}
+variable "aws_region" {}
+variable "aws_linux_2_ami" {}
+variable "aws_az_names" {
+  type = list(string)
+}
 
 variable "alb__target_group_arn" {}
 variable "iam__admin_key_name" {}
@@ -38,8 +18,7 @@ module "asg-webserver" {
   env                            = var.env
   organization                   = var.organization
   aws_linux_2_ami                = var.aws_linux_2_ami
-  aws_az_a                       = var.aws_az_a
-  tf_state_bucket                = var.tf_state_bucket
+  aws_az_names                   = var.aws_az_names
   aws_region                     = var.aws_region
   alb__target_group_arn          = var.alb__target_group_arn
   iam__admin_key_name            = var.iam__admin_key_name

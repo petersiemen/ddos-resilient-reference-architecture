@@ -1,24 +1,4 @@
-//provider "aws" {
-//  region = "us-east-1"
-//}
-//
-//
-//terraform {
-//  required_version = ">= 0.12.20"
-//
-//  backend "s3" {
-//    encrypt        = "true"
-//    bucket         = "acme-development-terraform-remote-state"
-//    key            = "certificates.tfstate"
-//    region         = "eu-central-1"
-//    dynamodb_table = "terraform-lock"
-//  }
-//}
-//
-//terraform {
-//  required_version = ">= 0.12.20"
-//}
-
+variable "domain" {}
 
 module "certificates" {
   providers = {

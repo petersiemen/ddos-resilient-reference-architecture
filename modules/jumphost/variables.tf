@@ -1,7 +1,6 @@
 variable "aws_region" {}
 variable "env" {}
 variable "organization" {}
-variable "tf_state_bucket" {}
 variable "aws_linux_2_ami" {}
 
 variable "iam__admin_key_name" {}

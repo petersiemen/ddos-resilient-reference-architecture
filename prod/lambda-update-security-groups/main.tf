@@ -1,18 +1,7 @@
-//provider "aws" {
-//  region = var.aws_region
-//}
-//
-//terraform {
-//  required_version = ">= 0.12.20"
-//
-//  backend "s3" {
-//    encrypt        = "true"
-//    bucket         = "acme-development-terraform-remote-state"
-//    key            = "lambda-update-security-groups.tfstate"
-//    region         = "eu-central-1"
-//    dynamodb_table = "terraform-lock"
-//  }
-//}
+variable "aws_account_id" {}
+variable "aws_region" {}
+variable "lambda_functions_bucket" {}
+variable "lambda_update_security_groups_prefix" {}
 
 
 module "lambda-update-security-groups" {

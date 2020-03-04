@@ -5,10 +5,24 @@ include {
 
 dependency "vpc" {
   config_path = "../vpc"
+  mock_outputs_allowed_terraform_commands = [
+    "validate", "plan"]
+
+  mock_outputs = {
+    public_subnet_1_id = "fake__public_subnet_1_id"
+    security_group_dmz_id = "fake__security_group_dmz_id"
+  }
 }
 
 dependency "iam" {
   config_path = "../iam"
+  mock_outputs_allowed_terraform_commands = [
+    "validate", "plan"]
+
+  mock_outputs = {
+    admin_key_name = "fake__admin_key_name"
+    aws_iam_instance_profile_ec2_name = "fake__aws_iam_instance_profile_ec2_name"
+  }
 }
 
 inputs = {

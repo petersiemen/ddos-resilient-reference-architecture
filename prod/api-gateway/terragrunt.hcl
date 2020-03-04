@@ -5,12 +5,31 @@ include {
 
 dependency "lambda-api-gateway" {
   config_path = "../lambda-api-gateway"
+  mock_outputs_allowed_terraform_commands = [
+    "validate", "plan"]
+
+  mock_outputs = {
+    lambda_function_invoke_arn = "fake__lambda_function_invoke_arn"
+    lambda_function_name = "fake__lambda_function_name"
+  }
 }
 dependency "waf" {
   config_path = "../waf"
+  mock_outputs_allowed_terraform_commands = [
+    "validate", "plan"]
+
+  mock_outputs = {
+    web_acl_id = "fake__web_acl_id"
+  }
 }
 dependency "certificates" {
   config_path = "../certificates"
+  mock_outputs_allowed_terraform_commands = [
+    "validate", "plan"]
+
+  mock_outputs = {
+    acm_certification_arn = "fake__acm_certification_arn"
+  }
 }
 
 

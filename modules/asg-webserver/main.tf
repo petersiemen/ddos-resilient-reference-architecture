@@ -13,6 +13,10 @@ resource "aws_launch_template" "launch-template" {
   vpc_security_group_ids = [
   var.vpc__security_group_private_id]
 
+  monitoring {
+    enabled = true
+  }
+
   tag_specifications {
     resource_type = "instance"
     tags = {
@@ -26,11 +30,10 @@ resource "aws_launch_template" "launch-template" {
 
 
 resource "aws_autoscaling_group" "asg" {
-  availability_zones = [
-  var.aws_az_a]
-  desired_capacity = 1
-  max_size         = 5
-  min_size         = 1
+  availability_zones = var.aws_az_names
+  desired_capacity   = 1
+  max_size           = 5
+  min_size           = 1
 
   target_group_arns = [
   var.alb__target_group_arn]

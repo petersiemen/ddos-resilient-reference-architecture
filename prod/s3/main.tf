@@ -1,18 +1,7 @@
-//provider "aws" {
-//  region = var.aws_region
-//}
-//
-//terraform {
-//  required_version = ">= 0.12.20"
-//
-//  backend "s3" {
-//    encrypt        = "true"
-//    bucket         = "acme-development-terraform-remote-state"
-//    key            = "s3.tfstate"
-//    region         = "eu-central-1"
-//    dynamodb_table = "terraform-lock"
-//  }
-//}
+variable "env" {}
+variable "organization" {}
+variable "aws_region" {}
+variable "lambda_functions_bucket" {}
 
 module "s3" {
   source                  = "../../modules/s3"

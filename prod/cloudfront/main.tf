@@ -1,3 +1,8 @@
+variable "env" {}
+variable "organization" {}
+variable "aws_region" {}
+variable "domain" {}
+
 variable "alb__dns_name" {}
 variable "alb__id" {}
 variable "waf__web_acl_id" {}

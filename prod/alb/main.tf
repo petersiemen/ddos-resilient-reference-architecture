@@ -1,3 +1,7 @@
+variable "env" {}
+variable "organization" {}
+variable "aws_region" {}
+
 variable "vpc__vpc_id" {}
 variable "vpc__security_group_lb_id" {}
 variable "vpc__security_group_cloudfront_g_http" {}
@@ -7,11 +11,10 @@ variable "vpc__public_subnet_2_id" {}
 variable "vpc__public_subnet_3_id" {}
 
 module "alb" {
-  source          = "../../modules/alb"
-  env             = var.env
-  organization    = var.organization
-  aws_region      = var.aws_region
-  tf_state_bucket = var.tf_state_bucket
+  source       = "../../modules/alb"
+  env          = var.env
+  organization = var.organization
+  aws_region   = var.aws_region
 
   vpc__vpc_id                           = var.vpc__vpc_id
   vpc__security_group_lb_id             = var.vpc__security_group_lb_id

@@ -1,19 +1,7 @@
-//provider "aws" {
-//  region = var.aws_region
-//}
-//
-//terraform {
-//  required_version = ">= 0.12.20"
-//
-//  backend "s3" {
-//    encrypt        = "true"
-//    bucket         = "acme-development-terraform-remote-state"
-//    key            = "lambda-api-gateway.tfstate"
-//    region         = "eu-central-1"
-//    dynamodb_table = "terraform-lock"
-//  }
-//}
-//
+variable "aws_account_id" {}
+variable "aws_region" {}
+variable "lambda_functions_bucket" {}
+variable "lambda_api_gateway_prefix" {}
 
 
 module "lambda-api-gateway" {

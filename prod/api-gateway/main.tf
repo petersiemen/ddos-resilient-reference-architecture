@@ -1,3 +1,6 @@
+variable "domain" {}
+variable "api_key" {}
+
 variable "lambda_api_gateway__lambda_function_invoke_arn" {}
 variable "lambda_api_gateway__lambda_function_name" {}
 variable "certificates__acm_certification_arn" {}

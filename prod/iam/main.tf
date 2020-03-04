@@ -1,20 +1,9 @@
-//provider "aws" {
-//  version = "~> 2.0"
-//  region  = var.aws_region
-//}
-//
-//terraform {
-//  required_version = ">= 0.12.20"
-//
-//  backend "s3" {
-//    encrypt        = "true"
-//    bucket         = "acme-development-terraform-remote-state"
-//    key            = "iam.tfstate"
-//    region         = "eu-central-1"
-//    dynamodb_table = "terraform-lock"
-//  }
-//}
-
+variable "env" {}
+variable "organization" {}
+variable "aws_region" {}
+variable "admin_public_ssh_key" {}
+variable "developer_name" {}
+variable "developer_ssh_key" {}
 
 module "iam" {
   source               = "../../modules/iam"
