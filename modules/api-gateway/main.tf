@@ -33,7 +33,7 @@ resource "aws_api_gateway_integration" "lambda-proxy-integration" {
 
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
-  uri                     = var.lambda_function_invoke_arn
+  uri                     = var.lambda_api_gateway__lambda_function_invoke_arn
 }
 
 
@@ -52,7 +52,7 @@ resource "aws_api_gateway_integration" "root-lambda-proxy-integration" {
 
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
-  uri                     = var.lambda_function_invoke_arn
+  uri                     = var.lambda_api_gateway__lambda_function_invoke_arn
 }
 
 resource "aws_api_gateway_deployment" "deployment" {
@@ -68,7 +68,7 @@ resource "aws_api_gateway_deployment" "deployment" {
 resource "aws_lambda_permission" "lambda-permissions" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
-  function_name = var.lambda_function_name
+  function_name = var.lambda_api_gateway__lambda_function_name
   principal     = "apigateway.amazonaws.com"
 
   # The "/*/*" portion grants access from any method on any resource
@@ -102,7 +102,7 @@ resource "aws_api_gateway_usage_plan" "usage-plan" {
 
 resource "aws_api_gateway_api_key" "api-key" {
   name  = "my_api_key"
-  value = var.api-key
+  value = var.api_key
 }
 
 resource "aws_api_gateway_usage_plan_key" "usage-plan-key" {
@@ -115,7 +115,7 @@ resource "aws_api_gateway_usage_plan_key" "usage-plan-key" {
 
 resource "aws_cloudfront_distribution" "cf-for-api-gateway" {
   enabled    = true
-  web_acl_id = var.web_acl_id
+  web_acl_id = var.waf__web_acl_id
 
   aliases = [
   "api.${var.domain}"]
@@ -164,7 +164,7 @@ resource "aws_cloudfront_distribution" "cf-for-api-gateway" {
     }
     custom_header {
       name  = "x-api-key"
-      value = var.api-key
+      value = var.api_key
     }
 
     domain_name = trimsuffix(trimprefix(aws_api_gateway_deployment.deployment.invoke_url, "https://"), "/prod")
@@ -177,7 +177,7 @@ resource "aws_cloudfront_distribution" "cf-for-api-gateway" {
     }
   }
   viewer_certificate {
-    acm_certificate_arn = var.acm_certification_arn
+    acm_certificate_arn = var.certificates__acm_certification_arn
     ssl_support_method  = "sni-only"
   }
 }

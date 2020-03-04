@@ -5,7 +5,7 @@ data "aws_route53_zone" "main" {
 resource "aws_cloudfront_distribution" "cf-for-dynamic-content" {
   enabled = true
 
-  web_acl_id = var.web_acl_id
+  web_acl_id = var.waf__web_acl_id
 
   aliases = [
     "www.${var.domain}",
@@ -24,7 +24,7 @@ resource "aws_cloudfront_distribution" "cf-for-dynamic-content" {
       "GET",
     "HEAD"]
 
-    target_origin_id = var.alb_id
+    target_origin_id = var.alb__id
 
     viewer_protocol_policy = "redirect-to-https"
 
@@ -47,8 +47,8 @@ resource "aws_cloudfront_distribution" "cf-for-dynamic-content" {
       origin_ssl_protocols = [
       "TLSv1.1"]
     }
-    domain_name = var.alb_dns_name
-    origin_id   = var.alb_id
+    domain_name = var.alb__dns_name
+    origin_id   = var.alb__id
   }
 
 
@@ -58,7 +58,7 @@ resource "aws_cloudfront_distribution" "cf-for-dynamic-content" {
     }
   }
   viewer_certificate {
-    acm_certificate_arn = var.acm_certification_arn
+    acm_certificate_arn = var.certificates__acm_certification_arn
     ssl_support_method  = "sni-only"
   }
 }

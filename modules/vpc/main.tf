@@ -83,46 +83,138 @@ resource "aws_internet_gateway" "internet-gateway-for-public-subnets" {
   }
 }
 
-resource "aws_eip" "elastic-ip-for-nat-gateway" {
+resource "aws_eip" "elastic-ip-for-nat-gateway-1" {
+  vpc = true
+}
+resource "aws_eip" "elastic-ip-for-nat-gateway-2" {
+  vpc = true
+}
+resource "aws_eip" "elastic-ip-for-nat-gateway-3" {
   vpc = true
 }
 
-resource "aws_nat_gateway" "nat-gateway-for-private-subnet" {
+resource "aws_nat_gateway" "nat-gateway-for-private-subnet-1" {
   subnet_id     = aws_subnet.public-1.id
-  allocation_id = aws_eip.elastic-ip-for-nat-gateway.id
+  allocation_id = aws_eip.elastic-ip-for-nat-gateway-1.id
 }
 
+resource "aws_nat_gateway" "nat-gateway-for-private-subnet-2" {
+  subnet_id     = aws_subnet.public-2.id
+  allocation_id = aws_eip.elastic-ip-for-nat-gateway-2.id
+}
 
-resource "aws_route_table" "route-table-for-public" {
+resource "aws_nat_gateway" "nat-gateway-for-private-subnet-3" {
+  subnet_id     = aws_subnet.public-3.id
+  allocation_id = aws_eip.elastic-ip-for-nat-gateway-3.id
+}
+
+resource "aws_route_table" "route-table-for-public-1" {
   vpc_id = aws_vpc.this.id
   tags = {
-    Name = "${var.organization}-${var.env}-public-non-main"
+    Name = "${var.organization}-${var.env}-public-1-non-main"
   }
 }
 
+resource "aws_route_table" "route-table-for-public-2" {
+  vpc_id = aws_vpc.this.id
+  tags = {
+    Name = "${var.organization}-${var.env}-public-2-non-main"
+  }
+}
+
+resource "aws_route_table" "route-table-for-public-3" {
+  vpc_id = aws_vpc.this.id
+  tags = {
+    Name = "${var.organization}-${var.env}-public-3-non-main"
+  }
+}
+
+resource "aws_route_table" "route-table-for-private-1" {
+  vpc_id = aws_vpc.this.id
+  tags = {
+    Name = "${var.organization}-${var.env}-private-1-non-main"
+  }
+}
+
+resource "aws_route_table" "route-table-for-private-2" {
+  vpc_id = aws_vpc.this.id
+  tags = {
+    Name = "${var.organization}-${var.env}-private-2-non-main"
+  }
+}
+
+resource "aws_route_table" "route-table-for-private-3" {
+  vpc_id = aws_vpc.this.id
+  tags = {
+    Name = "${var.organization}-${var.env}-private-3-non-main"
+  }
+}
+
+
 resource "aws_route_table_association" "public-subnet-1-to-public-route-table" {
-  route_table_id = aws_route_table.route-table-for-public.id
+  route_table_id = aws_route_table.route-table-for-public-1.id
   subnet_id      = aws_subnet.public-1.id
 }
 
 resource "aws_route_table_association" "public-subnet-2-to-public-route-table" {
-  route_table_id = aws_route_table.route-table-for-public.id
+  route_table_id = aws_route_table.route-table-for-public-2.id
   subnet_id      = aws_subnet.public-2.id
 }
 
 resource "aws_route_table_association" "public-subnet-3-to-public-route-table" {
-  route_table_id = aws_route_table.route-table-for-public.id
+  route_table_id = aws_route_table.route-table-for-public-3.id
   subnet_id      = aws_subnet.public-3.id
 }
 
-resource "aws_route" "internet-gateway-route" {
-  route_table_id         = aws_route_table.route-table-for-public.id
+
+resource "aws_route_table_association" "private-subnet-1-to-private-route-table" {
+  route_table_id = aws_route_table.route-table-for-private-1.id
+  subnet_id      = aws_subnet.private-1.id
+}
+
+resource "aws_route_table_association" "private-subnet-2-to-private-route-table" {
+  route_table_id = aws_route_table.route-table-for-private-2.id
+  subnet_id      = aws_subnet.private-2.id
+}
+
+resource "aws_route_table_association" "private-subnet-3-to-private-route-table" {
+  route_table_id = aws_route_table.route-table-for-private-3.id
+  subnet_id      = aws_subnet.private-3.id
+}
+
+
+resource "aws_route" "internet-gateway-route-for-public-1" {
+  route_table_id         = aws_route_table.route-table-for-public-1.id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.internet-gateway-for-public-subnets.id
 }
 
-resource "aws_route" "nat-gateway-route" {
-  route_table_id         = aws_vpc.this.default_route_table_id
+resource "aws_route" "internet-gateway-route-for-public-2" {
+  route_table_id         = aws_route_table.route-table-for-public-2.id
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = aws_nat_gateway.nat-gateway-for-private-subnet.id
+  gateway_id             = aws_internet_gateway.internet-gateway-for-public-subnets.id
+}
+
+resource "aws_route" "internet-gateway-route-for-public-3" {
+  route_table_id         = aws_route_table.route-table-for-public-3.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.internet-gateway-for-public-subnets.id
+}
+
+resource "aws_route" "nat-gateway-route-for-private-1" {
+  route_table_id         = aws_route_table.route-table-for-private-1.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.nat-gateway-for-private-subnet-1.id
+}
+
+resource "aws_route" "nat-gateway-route-for-private-2" {
+  route_table_id         = aws_route_table.route-table-for-private-2.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.nat-gateway-for-private-subnet-2.id
+}
+
+resource "aws_route" "nat-gateway-route-for-private-3" {
+  route_table_id         = aws_route_table.route-table-for-private-3.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.nat-gateway-for-private-subnet-3.id
 }

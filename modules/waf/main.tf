@@ -13,8 +13,6 @@ resource "aws_waf_rule" "wafrule" {
   name        = "${var.organization}-${var.env}-ip-somewhere-in-china"
   metric_name = "wafRuleIpSomewhereInChina"
 
-
-
   predicates {
     data_id = aws_waf_ipset.ipset.id
     negated = false

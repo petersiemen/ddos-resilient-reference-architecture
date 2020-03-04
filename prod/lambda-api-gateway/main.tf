@@ -1,19 +1,19 @@
-provider "aws" {
-  region = var.aws_region
-}
-
-terraform {
-  required_version = ">= 0.12.20"
-
-  backend "s3" {
-    encrypt        = "true"
-    bucket         = "acme-development-terraform-remote-state"
-    key            = "lambda-api-gateway.tfstate"
-    region         = "eu-central-1"
-    dynamodb_table = "terraform-lock"
-  }
-}
-
+//provider "aws" {
+//  region = var.aws_region
+//}
+//
+//terraform {
+//  required_version = ">= 0.12.20"
+//
+//  backend "s3" {
+//    encrypt        = "true"
+//    bucket         = "acme-development-terraform-remote-state"
+//    key            = "lambda-api-gateway.tfstate"
+//    region         = "eu-central-1"
+//    dynamodb_table = "terraform-lock"
+//  }
+//}
+//
 
 
 module "lambda-api-gateway" {

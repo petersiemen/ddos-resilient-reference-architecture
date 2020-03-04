@@ -1,8 +1,6 @@
 provider "aws" {
-  alias  = "us-east-1"
-  region = "us-east-1"
+  alias = "us-east-1"
 }
-
 
 resource "aws_lambda_function" "lambda-update-security-groups" {
   function_name = "UpdateSecurityGroups"

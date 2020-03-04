@@ -96,7 +96,7 @@ on AWS described in the AWS whitepaper [AWS Best Practices for DDos Resiliency](
         * Package and update the lambda function to s3
             ```shell script
             cd ~/workspace/update-security-group-for-cloudfront-access 
-            sam package --s3-prefix v1.0 --s3-bucket REPLACE_WITH_YOUR_S3_BUCKET_FOR_LAMBDA_ARTIFACTS
+            sam package --s3-prefix update-security-group-for-cloudfront-access/v1.0 --s3-bucket REPLACE_WITH_YOUR_S3_BUCKET_FOR_LAMBDA_ARTIFACTS
             ```
         * Terraform the **lambda** function, **iam role** and **iam policy** for lambda and 
         the **sns** topic that we are going to subscribe to

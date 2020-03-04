@@ -4,7 +4,7 @@ resource "aws_key_pair" "admin-key" {
 }
 
 resource "aws_iam_instance_profile" "ec2" {
-  name = "${var.organization}-${var.env}-ec2-profile"
+  name = "${var.organization}-${var.env}-ec2-instance-profile"
   path = "/terraform/"
   role = aws_iam_role.ec2-role.name
 }

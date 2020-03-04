@@ -73,6 +73,16 @@ resource "aws_network_acl" "public-subnets" {
     to_port   = 80
   }
 
+  #allow https connections
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 140
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 443
+    to_port    = 443
+  }
+
 
   # allow ssh'ing through the vpc
   egress {
@@ -102,6 +112,16 @@ resource "aws_network_acl" "public-subnets" {
     cidr_block = "0.0.0.0/0"
     from_port  = 1024
     to_port    = 65535
+  }
+
+  # allow outbound HTTPS traffic from the subnet to the internet.
+  egress {
+    protocol   = "tcp"
+    rule_no    = 130
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 443
+    to_port    = 443
   }
 
   tags = {
@@ -148,6 +168,16 @@ resource "aws_network_acl" "private-subnets" {
     to_port    = 80
   }
 
+  # allow inbound return traffic from hosts on the internet that are responding to requests originating in the subnet.
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 130
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 443
+    to_port    = 443
+  }
+
   # allow return traffic back to the vpc (ssh back to public subnet)
   egress {
     protocol   = "tcp"
@@ -166,6 +196,16 @@ resource "aws_network_acl" "private-subnets" {
     cidr_block = "0.0.0.0/0"
     from_port  = 80
     to_port    = 80
+  }
+
+  # allow outbound traffic to the internet on port 3128 for pip
+  egress {
+    protocol   = "tcp"
+    rule_no    = 120
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 443
+    to_port    = 443
   }
 
 
