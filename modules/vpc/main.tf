@@ -103,11 +103,6 @@ resource "aws_nat_gateway" "nat-gateway-for-private-subnet-2" {
   allocation_id = aws_eip.elastic-ip-for-nat-gateway-2.id
 }
 
-resource "aws_nat_gateway" "nat-gateway-for-private-subnet-3" {
-  subnet_id     = aws_subnet.public-3.id
-  allocation_id = aws_eip.elastic-ip-for-nat-gateway-3.id
-}
-
 resource "aws_route_table" "route-table-for-public-1" {
   vpc_id = aws_vpc.this.id
   tags = {
@@ -216,5 +211,5 @@ resource "aws_route" "nat-gateway-route-for-private-2" {
 resource "aws_route" "nat-gateway-route-for-private-3" {
   route_table_id         = aws_route_table.route-table-for-private-3.id
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = aws_nat_gateway.nat-gateway-for-private-subnet-3.id
+  nat_gateway_id         = aws_nat_gateway.nat-gateway-for-private-subnet-2.id
 }

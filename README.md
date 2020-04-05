@@ -6,7 +6,6 @@ on AWS described in the AWS whitepaper [AWS Best Practices for DDos Resiliency](
 
 ### Getting Started
 
-
 1. Prerequisites
     * [aws-cli](https://aws.amazon.com/cli/) 
     * [terraform](https://www.terraform.io/)
@@ -14,7 +13,8 @@ on AWS described in the AWS whitepaper [AWS Best Practices for DDos Resiliency](
     * AWS account
     * IAM user in AWS with programmatic access activate (ACCESS_KEY_ID, SECRET_ACCESS_KEY)
     * configure [aws-cli](https://aws.amazon.com/cli/) to use a AWS_PROFILE with the downloaded ACCESS_KEY_ID, SECRET_ACCESS_KEY associated
-    * Buy a domain and register it in AWS Route53  
+    * Buy a domain and register it in AWS Route53
+    * Read my [blog post](https://petersiemen.net/ddos-resilient-reference-architecture-on-aws) for a more information about this stack   
     
 2. Prepare environment
     ```shell script
